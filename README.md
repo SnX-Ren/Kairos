@@ -103,4 +103,8 @@ responsibly.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+**PolyForm Noncommercial 1.0.0** — see [LICENSE](LICENSE).
+
+You're free to use, study, modify, and share this project for any
+**noncommercial** purpose (research, education, personal, hobby). Commercial
+use is not permitted. For commercial licensing, contact the author.
