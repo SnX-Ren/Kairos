@@ -1,0 +1,78 @@
+{
+  "lottery": "maismilionaria",
+  "n_draws": 368,
+  "pool": "1-50",
+  "balls": 6,
+  "ran_at": "04/07/2026 12:22",
+  "elapsed_s": 15.0,
+  "tests": [
+    {
+      "test": "Hipergeometrico multivariado",
+      "statistic": 66.24,
+      "chi2_pearson": 59.48,
+      "p_pearson_incorreto": 0.14507,
+      "df": 49,
+      "p_value": 0.05084,
+      "verdict": "uniforme",
+      "note": "correcao (N-1)/(N-k) = 1.1136 sobre o Pearson"
+    },
+    {
+      "test": "Higher Criticism (Donoho-Jin)",
+      "statistic": 2.391,
+      "null_mean": 1.951,
+      "n_sims": 300,
+      "p_value": 0.18,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Bayes factor Dirichlet-multinomial",
+      "log10_bf_por_prior": {
+        "alpha=0.5": 38.12,
+        "alpha=1.0": 29.44,
+        "alpha=5.0": 12.89,
+        "alpha=10.0": 7.48
+      },
+      "note": "log10 BF > 0 favorece uniformidade; cada unidade = 10x mais provavel",
+      "verdict": "EVIDENCIA PRO-UNIFORMIDADE"
+    },
+    {
+      "test": "Gaps / tempos de espera (Haigh 1997)",
+      "n_gaps": 2158,
+      "gap_medio": 8.125,
+      "gap_esperado": 8.333,
+      "statistic": 27.16,
+      "df": 29,
+      "p_value": 0.5632,
+      "verdict": "geometrico (ok)"
+    },
+    {
+      "test": "Neyman smooth (ordem 4)",
+      "componentes": {
+        "tendencia linear": -0.077,
+        "curvatura": -0.147,
+        "assimetria cubica": -0.244,
+        "ordem 4": 0.08
+      },
+      "S4": 0.093,
+      "p_value": 1.0,
+      "n_sims": 300,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Scan statistics (janelas 100/250/500)",
+      "statistic": 3.385,
+      "null_mean": 3.387,
+      "n_sims": 80,
+      "p_value": 0.4625,
+      "verdict": "sem episodios"
+    },
+    {
+      "test": "Permutation entropy (Bandt-Pompe, d=4, serie da soma)",
+      "H_norm": 0.9853,
+      "null_mean": 0.9911,
+      "missing_patterns": 0,
+      "p_value": 0.045,
+      "verdict": "DETERMINISMO NA SERIE"
+    }
+  ]
+}

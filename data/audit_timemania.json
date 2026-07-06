@@ -1,0 +1,78 @@
+{
+  "lottery": "timemania",
+  "n_draws": 2394,
+  "pool": "1-80",
+  "balls": 7,
+  "ran_at": "04/07/2026 12:21",
+  "elapsed_s": 36.7,
+  "tests": [
+    {
+      "test": "Hipergeometrico multivariado",
+      "statistic": 78.07,
+      "chi2_pearson": 72.14,
+      "p_pearson_incorreto": 0.69454,
+      "df": 79,
+      "p_value": 0.50839,
+      "verdict": "uniforme",
+      "note": "correcao (N-1)/(N-k) = 1.0822 sobre o Pearson"
+    },
+    {
+      "test": "Higher Criticism (Donoho-Jin)",
+      "statistic": 4.174,
+      "null_mean": 1.717,
+      "n_sims": 300,
+      "p_value": 0.0467,
+      "verdict": "SINAL RARO-E-FRACO DETECTADO"
+    },
+    {
+      "test": "Bayes factor Dirichlet-multinomial",
+      "log10_bf_por_prior": {
+        "alpha=0.5": 93.26,
+        "alpha=1.0": 78.94,
+        "alpha=5.0": 49.71,
+        "alpha=10.0": 38.27
+      },
+      "note": "log10 BF > 0 favorece uniformidade; cada unidade = 10x mais provavel",
+      "verdict": "EVIDENCIA PRO-UNIFORMIDADE"
+    },
+    {
+      "test": "Gaps / tempos de espera (Haigh 1997)",
+      "n_gaps": 16678,
+      "gap_medio": 11.368,
+      "gap_esperado": 11.429,
+      "statistic": 37.91,
+      "df": 29,
+      "p_value": 0.1244,
+      "verdict": "geometrico (ok)"
+    },
+    {
+      "test": "Neyman smooth (ordem 4)",
+      "componentes": {
+        "tendencia linear": -0.322,
+        "curvatura": 0.751,
+        "assimetria cubica": 0.089,
+        "ordem 4": -1.052
+      },
+      "S4": 1.783,
+      "p_value": 0.76,
+      "n_sims": 300,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Scan statistics (janelas 100/250/500)",
+      "statistic": 3.981,
+      "null_mean": 4.383,
+      "n_sims": 80,
+      "p_value": 0.925,
+      "verdict": "sem episodios"
+    },
+    {
+      "test": "Permutation entropy (Bandt-Pompe, d=4, serie da soma)",
+      "H_norm": 0.9985,
+      "null_mean": 0.9986,
+      "missing_patterns": 0,
+      "p_value": 0.37,
+      "verdict": "ruido (ok)"
+    }
+  ]
+}

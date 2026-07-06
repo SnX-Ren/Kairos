@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kairos — Painel</title>
+<style>
+  :root {
+    --bg: #0e1210; --panel: #151b17; --panel-2: #1b2320;
+    --border: #24302a; --text: #e4e9e5; --muted: #7f8d84;
+    --green: #34d399; --green-ink: #34d399;
+    --green-dim: rgba(52, 211, 153, .10); --green-border: rgba(52, 211, 153, .35);
+    --amber: #fbbf24; --red: #f87171; --btn-text: #071310;
+    --shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+  [data-theme="light"] {
+    --bg: #f3f4f1; --panel: #ffffff; --panel-2: #eef1ec;
+    --border: #dde2da; --text: #1f2823; --muted: #66736a;
+    --green: #0f9d6a; --green-ink: #0b7a52;
+    --green-dim: rgba(15, 157, 106, .08); --green-border: rgba(15, 157, 106, .35);
+    --amber: #b45309; --red: #b91c1c; --btn-text: #f3faf6;
+    --shadow: 0 1px 3px rgba(31, 40, 35, .08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: dark; }
+  [data-theme="light"] { color-scheme: light; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    min-height: 100vh; padding: 2rem 1.25rem 3rem;
+    transition: background .25s, color .25s;
+  }
+  .mono { font-family: "Cascadia Code", Consolas, monospace; }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+
+  /* ── header / leitura do instrumento ─────────────────────── */
+  header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem; margin-bottom: 1.75rem; flex-wrap: wrap;
+  }
+  .brand h1 {
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 1.55rem; font-weight: 700; letter-spacing: .22em;
+    color: var(--green-ink);
+  }
+  .brand .sub { color: var(--muted); font-size: .82rem; margin-top: .3rem; max-width: 34rem; }
+  .theme-btn {
+    background: var(--panel); border: 1px solid var(--border);
+    color: var(--text); border-radius: 999px; padding: .5rem .95rem;
+    cursor: pointer; font-size: .82rem; display: flex; gap: .45rem; align-items: center;
+    transition: border-color .15s;
+  }
+  .theme-btn:hover { border-color: var(--green-border); }
+
+  .readout {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: .9rem 1.25rem; margin-bottom: 1.5rem;
+    display: flex; flex-wrap: wrap; gap: 1.75rem; align-items: center;
+    box-shadow: var(--shadow);
+  }
+  .readout .item .k {
+    color: var(--muted); font-size: .62rem; text-transform: uppercase;
+    letter-spacing: .1em; margin-bottom: .3rem;
+  }
+  .readout .item .v { font-size: .92rem; font-weight: 600; }
+  .mini-ball {
+    display: inline-flex; width: 27px; height: 27px; border-radius: 50%;
+    align-items: center; justify-content: center;
+    font-size: .68rem; font-weight: 700;
+    background: var(--panel-2); border: 1px solid var(--border);
+    margin-right: .3rem;
+  }
+  .mini-ball.blocked { border-color: var(--red); color: var(--red); text-decoration: line-through; }
+
+  /* ── layout ───────────────────────────────────────────────── */
+  .cols { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.4rem; margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+  }
+  .panel h2 {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); margin-bottom: 1rem; font-weight: 600;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chip {
+    background: var(--panel-2); border: 1px solid var(--border);
+    color: var(--muted); padding: .42rem .95rem; border-radius: 999px;
+    cursor: pointer; font-size: .84rem; transition: all .15s; user-select: none;
+  }
+  .chip:hover { border-color: var(--green-border); color: var(--text); }
+  .chip.active {
+    background: var(--green-dim); border-color: var(--green);
+    color: var(--green-ink); font-weight: 600;
+  }
+
+  .slider-row { display: flex; align-items: center; gap: 1rem; }
+  input[type=range] {
+    flex: 1; appearance: none; height: 6px; border-radius: 3px;
+    background: var(--panel-2); outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--green); cursor: pointer;
+    box-shadow: 0 0 0 4px var(--green-dim);
+  }
+  .slider-val {
+    min-width: 3.4rem; text-align: center; font-size: 1.35rem;
+    font-weight: 700; color: var(--green-ink);
+    font-family: "Cascadia Code", Consolas, monospace;
+  }
+  .slider-val small { display: block; font-size: .6rem; color: var(--muted); font-weight: 400; letter-spacing: .05em; }
+
+  .toggles { display: grid; gap: .7rem; }
+  .toggle {
+    display: flex; align-items: flex-start; gap: .75rem;
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: .78rem .9rem; cursor: pointer;
+    transition: border-color .15s;
+  }
+  .toggle:hover { border-color: var(--green-border); }
+  .toggle.disabled { opacity: .45; cursor: not-allowed; }
+  .toggle input { display: none; }
+  .switch {
+    width: 34px; height: 19px; border-radius: 999px; flex-shrink: 0;
+    background: var(--border); position: relative; transition: background .15s; margin-top: 2px;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 2.5px; left: 3px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--muted); transition: all .15s;
+  }
+  .toggle input:checked + .switch { background: var(--green); }
+  .toggle input:checked + .switch::after { left: 17px; background: var(--panel); }
+  .toggle .lbl { font-size: .85rem; font-weight: 600; }
+  .toggle .desc { font-size: .72rem; color: var(--muted); margin-top: .18rem; line-height: 1.45; }
+  .badge {
+    font-size: .58rem; padding: .12rem .4rem; border-radius: 4px;
+    margin-left: .35rem; vertical-align: middle;
+    font-family: "Cascadia Code", Consolas, monospace;
+  }
+  .badge.sig   { background: var(--green-dim); color: var(--green-ink); }
+  .badge.weak  { background: rgba(251,191,36,.12); color: var(--amber); }
+  .badge.noise { background: rgba(248,113,113,.12); color: var(--red); }
+
+  .gen-btn {
+    width: 100%; padding: .95rem; border: none; border-radius: 12px;
+    background: var(--green); color: var(--btn-text);
+    font-size: .95rem; font-weight: 700; letter-spacing: .06em;
+    cursor: pointer; transition: filter .15s, transform .1s; text-transform: uppercase;
+  }
+  .gen-btn:hover { filter: brightness(1.08); }
+  .gen-btn:active { transform: translateY(1px); }
+  .gen-btn:disabled { opacity: .5; cursor: wait; }
+
+  .game {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .85rem 0; border-bottom: 1px solid var(--border);
+    animation: fadeUp .3s ease both;
+  }
+  .game:last-child { border-bottom: none; }
+  .game-n { color: var(--muted); font-size: .72rem; min-width: 2.1rem;
+            font-family: "Cascadia Code", Consolas, monospace; }
+  .balls { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .ball {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--panel-2); border: 1.5px solid var(--green-border);
+    color: var(--green-ink); font-weight: 700; font-size: .85rem;
+    font-family: "Cascadia Code", Consolas, monospace;
+  }
+  .ml-tag { font-size: .68rem; color: var(--muted); margin-top: .6rem; }
+  .ball.fav { border-color: var(--amber); box-shadow: 0 0 0 2px rgba(251,191,36,.25); }
+
+  /* grade de numeros da sorte */
+  .numgrid { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .numcell {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--panel-2); border: 1.5px solid var(--border);
+    color: var(--muted); font-size: .74rem; font-weight: 700;
+    font-family: "Cascadia Code", Consolas, monospace;
+    cursor: pointer; user-select: none; transition: all .12s;
+  }
+  .numcell:hover { border-color: var(--green-border); color: var(--text); }
+  .numcell.sel {
+    background: var(--green-dim); border-color: var(--amber);
+    color: var(--amber);
+  }
+  .fav-actions { display: flex; justify-content: space-between; align-items: center;
+                 margin-top: .7rem; font-size: .74rem; color: var(--muted); }
+  .fav-clear { background: none; border: none; color: var(--muted); cursor: pointer;
+               font-size: .74rem; text-decoration: underline; }
+  .fav-clear:hover { color: var(--text); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .game { animation: none; } }
+
+  /* ── sidebar sistema ──────────────────────────────────────── */
+  .sys-btn {
+    width: 100%; padding: .7rem; border-radius: 10px; margin-bottom: .6rem;
+    background: var(--panel-2); border: 1px solid var(--border);
+    color: var(--text); font-size: .84rem; font-weight: 600; cursor: pointer;
+    transition: border-color .15s;
+  }
+  .sys-btn:hover { border-color: var(--green-border); }
+  .sys-btn:disabled { opacity: .5; cursor: wait; }
+  .sys-status {
+    font-size: .74rem; color: var(--muted); line-height: 1.5;
+    background: var(--panel-2); border-radius: 8px; padding: .6rem .75rem;
+    margin-top: .4rem; font-family: "Cascadia Code", Consolas, monospace;
+    max-height: 130px; overflow-y: auto;
+  }
+  .sys-status.ok    { color: var(--green-ink); }
+  .sys-status.error { color: var(--red); }
+  .model-meta { font-size: .74rem; color: var(--muted); line-height: 1.7; margin-top: .5rem; }
+  .model-meta b { color: var(--text); }
+  .spin {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid var(--green); border-top-color: transparent;
+    animation: spin .8s linear infinite; margin-right: .4rem; vertical-align: -1px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer {
+    color: var(--muted); font-size: .72rem; line-height: 1.65;
+    border-top: 1px solid var(--border); padding-top: 1.2rem; margin-top: 1.5rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>KAIROS</h1>
+      <p class="sub">Seu gerador inteligente de jogos — construído estudando mais de 24 mil sorteios reais</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">
+      <span id="themeIcon">☀</span> <span id="themeLbl">Tema claro</span>
+    </button>
+  </header>
+
+  <div class="readout" id="readout">
+    <div class="item"><div class="k">carregando</div><div class="v mono">…</div></div>
+  </div>
+
+  <div class="cols">
+    <!-- coluna principal -->
+    <div>
+      <div class="panel">
+        <h2>Loteria</h2>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Quantidade de jogos</h2>
+        <div class="slider-row">
+          <input type="range" id="nGames" min="1" max="10" value="3">
+          <div class="slider-val"><span id="nGamesVal">3</span><small>jogos</small></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Seus números da sorte</h2>
+        <div class="numgrid" id="favGrid"></div>
+        <div class="fav-actions">
+          <span id="favCount">Toque nos números que quer ver nos seus jogos — eles ganham prioridade</span>
+          <button class="fav-clear" onclick="clearFavs()">limpar</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Como montar seus jogos</h2>
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="anti_crowd" checked>
+            <div class="switch"></div>
+            <div>
+              <div class="lbl">Fugir da multidão <span class="badge sig">vantagem real</span></div>
+              <div class="desc">Evita números que muita gente joga (aniversários, 7, 13). Não muda sua chance — mas se ganhar, divide o prêmio com menos gente</div>
+            </div>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="freq_blend" checked>
+            <div class="switch"></div>
+            <div>
+              <div class="lbl">Preferir números quentes <span class="badge sig">efeito pequeno comprovado</span></div>
+              <div class="desc">Dá um empurrão aos números que mais saíram na história desta loteria</div>
+            </div>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="anti_repeat" checked>
+            <div class="switch"></div>
+            <div>
+              <div class="lbl">Evitar quem acabou de sair <span class="badge weak">indício fraco</span></div>
+              <div class="desc">Dá menos peso aos números do último sorteio</div>
+            </div>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="fib_filter" checked>
+            <div class="switch"></div>
+            <div>
+              <div class="lbl">Pular números especiais repetidos <span class="badge weak">indício fraco</span></div>
+              <div class="desc">Deixa de fora números de uma sequência matemática especial (1, 2, 3, 5, 8, 13, 21, 34, 55) que saíram no último sorteio</div>
+            </div>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="pair_affinity">
+            <div class="switch"></div>
+            <div>
+              <div class="lbl">Duplas inseparáveis <span class="badge noise">por diversão</span></div>
+              <div class="desc">Favorece números que costumam sair juntos — sem efeito comprovado, use por diversão</div>
+            </div>
+          </label>
+          <label class="toggle" id="mlToggle">
+            <input type="checkbox" id="use_ml">
+            <div class="switch"></div>
+            <div>
+              <div class="lbl">Usar IA na geração <span class="badge weak" id="mlBadge">experimental</span></div>
+              <div class="desc" id="mlDesc">Mistura as sugestões da inteligência artificial treinada com o histórico</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <button class="gen-btn" id="genBtn" onclick="generate()">Gerar jogos</button>
+      </div>
+
+      <div class="panel" id="resultsPanel" style="display:none">
+        <h2>Jogos gerados</h2>
+        <div id="results"></div>
+        <div class="ml-tag" id="mlTag"></div>
+      </div>
+    </div>
+
+    <!-- sidebar sistema -->
+    <div>
+      <div class="panel">
+        <h2>Resultados</h2>
+        <button class="sys-btn" id="updateBtn" onclick="updateData()">Buscar resultados novos</button>
+        <div class="model-meta" id="dataMeta"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Inteligência artificial — <span id="mlLotteryName" class="mono">megasena</span></h2>
+        <button class="sys-btn" id="trainBtn" onclick="trainModel()">Treinar IA</button>
+        <div class="model-meta" id="modelMeta">IA ainda não treinada.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Saúde dos sorteios</h2>
+        <button class="sys-btn" id="auditBtn" onclick="runAudit()">Verificar sorteios</button>
+        <div class="model-meta" id="auditMeta">Nunca verificada.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Status do sistema</h2>
+        <div class="sys-status" id="sysLog">Ocioso.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <b>Para ser honesto com você:</b> estudamos mais de 24 mil sorteios reais e nenhum método no mundo
+    consegue prever os números — os globos são bem calibrados e auditados. O que este app faz é montar
+    jogos inteligentes: evita números que muita gente joga (para você não dividir o prêmio se ganhar)
+    e aplica os pequenos padrões que encontramos no histórico. Jogue por diversão e com responsabilidade.
+  </footer>
+</div>
+
+<script>
+let lotteries = [];
+let selected = "megasena";
+let polling = null;
+const favorites = {};   // loteria -> Set de numeros da sorte
+
+const $ = id => document.getElementById(id);
+
+function favSet() {
+  if (!favorites[selected]) favorites[selected] = new Set();
+  return favorites[selected];
+}
+
+function poolRange() {
+  const l = cur();
+  if (!l) return [1, 60];
+  const [lo, hi] = l.pool.split("-").map(Number);
+  return [lo, hi];
+}
+
+function renderFavGrid() {
+  const [lo, hi] = poolRange();
+  const set = favSet();
+  const grid = $("favGrid");
+  grid.innerHTML = "";
+  for (let n = lo; n <= hi; n++) {
+    const c = document.createElement("div");
+    c.className = "numcell" + (set.has(n) ? " sel" : "");
+    c.textContent = String(n).padStart(2, "0");
+    c.onclick = () => {
+      set.has(n) ? set.delete(n) : set.add(n);
+      c.classList.toggle("sel");
+      updateFavCount();
+    };
+    grid.appendChild(c);
+  }
+  updateFavCount();
+}
+
+function updateFavCount() {
+  const k = favSet().size;
+  $("favCount").textContent = k === 0
+    ? "Toque nos números que quer ver nos seus jogos — eles ganham prioridade"
+    : `${k} número${k > 1 ? "s" : ""} da sorte escolhido${k > 1 ? "s" : ""} — aparecerão com mais frequência nos jogos`;
+}
+
+function clearFavs() {
+  favSet().clear();
+  renderFavGrid();
+}
+
+/* ── tema ── */
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  $("themeIcon").textContent = t === "dark" ? "☀" : "☾";
+  $("themeLbl").textContent = t === "dark" ? "Tema claro" : "Tema escuro";
+  localStorage.setItem("kairos-theme", t);
+}
+function toggleTheme() {
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+}
+applyTheme(localStorage.getItem("kairos-theme") || "dark");
+
+$("nGames").oninput = e => $("nGamesVal").textContent = e.target.value;
+
+/* ── carga ── */
+async function load() {
+  const res = await fetch("/api/lotteries");
+  lotteries = await res.json();
+  if (!lotteries.find(l => l.name === selected)) selected = lotteries[0]?.name;
+  const chips = $("chips");
+  chips.innerHTML = "";
+  for (const l of lotteries) {
+    const c = document.createElement("div");
+    c.className = "chip" + (l.name === selected ? " active" : "");
+    c.textContent = l.name;
+    c.onclick = () => { selected = l.name; render(); };
+    chips.appendChild(c);
+  }
+  render();
+}
+
+function cur() { return lotteries.find(x => x.name === selected); }
+
+function render() {
+  document.querySelectorAll(".chip").forEach(c =>
+    c.classList.toggle("active", c.textContent === selected));
+  const l = cur();
+  if (!l) return;
+  loadAudit();
+  renderFavGrid();
+
+  const lastBalls = l.last_draw.map(n =>
+    `<span class="mini-ball${l.fib_blocked.includes(n) ? " blocked" : ""}">${n}</span>`).join("");
+  $("readout").innerHTML = `
+    <div class="item"><div class="k">loteria</div><div class="v mono">${l.name}</div></div>
+    <div class="item"><div class="k">sorteios</div><div class="v mono">${l.draws.toLocaleString("pt-BR")}</div></div>
+    <div class="item"><div class="k">pool</div><div class="v mono">${l.pool} · ${l.balls} bolas</div></div>
+    <div class="item"><div class="k">último concurso</div><div class="v mono">#${l.last_concurso} — ${l.last_data}</div></div>
+    <div class="item"><div class="k">último resultado</div><div class="v">${lastBalls}</div></div>`;
+
+  $("mlLotteryName").textContent = l.name;
+  const ml = l.ml;
+  const toggle = $("mlToggle"), box = $("use_ml");
+  if (ml) {
+    toggle.classList.remove("disabled");
+    box.disabled = false;
+    $("mlBadge").textContent = "experimental";
+    $("mlBadge").className = "badge weak";
+    $("mlDesc").textContent =
+      `Mistura as sugestões da IA, que estudou todos os sorteios até o concurso #${ml.trained_until_concurso}`;
+    const acerto = (ml.precision_at_k * 100).toFixed(1).replace(".", ",");
+    const sorte  = (ml.baseline * 100).toFixed(1).replace(".", ",");
+    $("modelMeta").innerHTML =
+      `IA treinada em ${ml.trained_at}, conhece os sorteios até o concurso <b>#${ml.trained_until_concurso}</b>.<br>` +
+      `Taxa de acerto em teste: <b>${acerto}%</b> (sorte pura: ${sorte}%) — ` +
+      `por isso dizemos que é experimental: ninguém prevê a loteria.`;
+  } else {
+    toggle.classList.add("disabled");
+    box.checked = false; box.disabled = true;
+    $("mlBadge").textContent = "treine primeiro";
+    $("mlBadge").className = "badge weak";
+    $("mlDesc").textContent = "Toque em 'Treinar IA' no painel ao lado para habilitar";
+    $("modelMeta").textContent = "IA ainda não treinada.";
+  }
+  $("dataMeta").innerHTML =
+    `Temos <b>${l.draws.toLocaleString("pt-BR")}</b> sorteios guardados, até o concurso <b>#${l.last_concurso}</b>.<br>` +
+    `O botão acima baixa os resultados mais recentes e atualiza a IA.`;
+}
+
+/* ── geração ── */
+async function generate() {
+  const btn = $("genBtn");
+  btn.disabled = true; btn.textContent = "Gerando…";
+  try {
+    const body = {
+      lottery: selected,
+      n_games: +$("nGames").value,
+      fib_filter: $("fib_filter").checked,
+      anti_repeat: $("anti_repeat").checked,
+      freq_blend: $("freq_blend").checked,
+      pair_affinity: $("pair_affinity").checked,
+      anti_crowd: $("anti_crowd").checked,
+      use_ml: $("use_ml").checked,
+      favorites: [...favSet()],
+    };
+    const res = await fetch("/api/generate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    const fav = favSet();
+    $("results").innerHTML = data.games.map((g, i) => `
+      <div class="game" style="animation-delay:${i * 55}ms">
+        <div class="game-n">#${String(i + 1).padStart(2, "0")}</div>
+        <div class="balls">${g.map(n =>
+          `<div class="ball${fav.has(n) ? " fav" : ""}">${String(n).padStart(2, "0")}</div>`).join("")}</div>
+      </div>`).join("");
+    $("mlTag").textContent = data.ml_used
+      ? "Jogos criados com ajuda da IA." + (fav.size ? " Dourado = seus números da sorte." : "")
+      : (fav.size ? "Dourado = seus números da sorte." : "");
+    $("resultsPanel").style.display = "block";
+  } finally {
+    btn.disabled = false; btn.textContent = "Gerar jogos";
+  }
+}
+
+/* ── sistema: update + train + polling ── */
+function setBusy(b) {
+  $("updateBtn").disabled = b;
+  $("trainBtn").disabled = b;
+}
+
+async function pollStatus() {
+  const res = await fetch("/api/system/status");
+  const st = await res.json();
+  const log = $("sysLog");
+  if (st.state === "running") {
+    log.className = "sys-status";
+    log.innerHTML = `<span class="spin"></span>` + (st.log.slice(-4).join("<br>") || "iniciando…");
+    setBusy(true);
+  } else {
+    clearInterval(polling); polling = null;
+    setBusy(false);
+    log.className = "sys-status " + (st.state === "error" ? "error" : st.state === "done" ? "ok" : "");
+    log.innerHTML = st.log.length ? st.log.slice(-5).join("<br>") : "Ocioso.";
+    if (st.state === "done") await load();
+  }
+}
+
+function startPolling() {
+  if (polling) return;
+  pollStatus();
+  polling = setInterval(pollStatus, 1500);
+}
+
+async function updateData() {
+  const res = await fetch("/api/system/update", { method: "POST",
+    headers: { "Content-Type": "application/json" }, body: "{}" });
+  if (res.status === 409) return;
+  startPolling();
+}
+
+/* ── auditoria ── */
+let auditPoll = null;
+
+async function loadAudit() {
+  const res = await fetch(`/api/audit/${selected}`);
+  const rep = await res.json();
+  const el = $("auditMeta");
+  $("auditBtn").disabled = !!rep.running;
+  if (rep.running) {
+    el.innerHTML = `<span class="spin"></span> Verificando ${selected}… (leva ~1 min)`;
+    if (!auditPoll) auditPoll = setInterval(loadAudit, 3000);
+    return;
+  }
+  if (auditPoll) { clearInterval(auditPoll); auditPoll = null; }
+  if (!rep.exists) { el.textContent = "Nunca verificada."; return; }
+  const NOMES = {
+    "Hipergeometrico multivariado": "Equilíbrio dos números",
+    "Higher Criticism": "Números fora da curva",
+    "Bayes factor Dirichlet-multinomial": "Globo honesto?",
+    "Gaps / tempos de espera": "Ritmo dos números",
+    "Neyman smooth": "Tendência por faixa",
+    "Scan statistics": "Épocas estranhas",
+    "Permutation entropy": "Padrões escondidos",
+  };
+  const rows = rep.tests.map(t => {
+    const bad = t.verdict && /DESVIO|SINAL|DETECTADO|EPISODIO|DETERMINISMO|clustering|VIES/.test(t.verdict);
+    const shortName = t.test.split("(")[0].trim();
+    const nome = NOMES[shortName] || shortName;
+    return `<div style="display:flex;justify-content:space-between;gap:.5rem;padding:.15rem 0">
+      <span>${nome}</span>
+      <span class="badge ${bad ? "weak" : "sig"}" title="${t.verdict}">${bad ? "algo estranho" : "tudo certo"}</span></div>`;
+  }).join("");
+  el.innerHTML = `<div style="margin-bottom:.4rem">Última verificação: ${rep.ran_at}</div>${rows}`;
+}
+
+async function runAudit() {
+  const res = await fetch("/api/audit/run", { method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lottery: selected }) });
+  if (res.status !== 409) loadAudit();
+}
+
+async function trainModel() {
+  const res = await fetch("/api/ml/train", { method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lottery: selected }) });
+  if (res.status === 409) return;
+  startPolling();
+}
+
+load();
+</script>
+</body>
+</html>

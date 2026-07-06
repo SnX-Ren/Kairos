@@ -1,0 +1,78 @@
+{
+  "lottery": "lotomania",
+  "n_draws": 2944,
+  "pool": "0-99",
+  "balls": 20,
+  "ran_at": "04/07/2026 12:21",
+  "elapsed_s": 49.3,
+  "tests": [
+    {
+      "test": "Hipergeometrico multivariado",
+      "statistic": 101.66,
+      "chi2_pearson": 82.15,
+      "p_pearson_incorreto": 0.8897,
+      "df": 99,
+      "p_value": 0.40721,
+      "verdict": "uniforme",
+      "note": "correcao (N-1)/(N-k) = 1.2375 sobre o Pearson"
+    },
+    {
+      "test": "Higher Criticism (Donoho-Jin)",
+      "statistic": 1.978,
+      "null_mean": 2.053,
+      "n_sims": 300,
+      "p_value": 0.4033,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Bayes factor Dirichlet-multinomial",
+      "log10_bf_por_prior": {
+        "alpha=0.5": 140.84,
+        "alpha=1.0": 122.83,
+        "alpha=5.0": 85.7,
+        "alpha=10.0": 70.77
+      },
+      "note": "log10 BF > 0 favorece uniformidade; cada unidade = 10x mais provavel",
+      "verdict": "EVIDENCIA PRO-UNIFORMIDADE"
+    },
+    {
+      "test": "Gaps / tempos de espera (Haigh 1997)",
+      "n_gaps": 58780,
+      "gap_medio": 4.993,
+      "gap_esperado": 5.0,
+      "statistic": 29.99,
+      "df": 29,
+      "p_value": 0.4143,
+      "verdict": "geometrico (ok)"
+    },
+    {
+      "test": "Neyman smooth (ordem 4)",
+      "componentes": {
+        "tendencia linear": -0.887,
+        "curvatura": -0.641,
+        "assimetria cubica": -0.003,
+        "ordem 4": -0.292
+      },
+      "S4": 1.284,
+      "p_value": 0.8033,
+      "n_sims": 300,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Scan statistics (janelas 100/250/500)",
+      "statistic": 4.36,
+      "null_mean": 4.244,
+      "n_sims": 80,
+      "p_value": 0.3125,
+      "verdict": "sem episodios"
+    },
+    {
+      "test": "Permutation entropy (Bandt-Pompe, d=4, serie da soma)",
+      "H_norm": 0.999,
+      "null_mean": 0.9989,
+      "missing_patterns": 0,
+      "p_value": 0.575,
+      "verdict": "ruido (ok)"
+    }
+  ]
+}

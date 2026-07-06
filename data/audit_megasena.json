@@ -1,0 +1,78 @@
+{
+  "lottery": "megasena",
+  "n_draws": 1886,
+  "pool": "1-60",
+  "balls": 6,
+  "ran_at": "04/07/2026 12:17",
+  "elapsed_s": 62.6,
+  "tests": [
+    {
+      "test": "Hipergeometrico multivariado",
+      "statistic": 95.52,
+      "chi2_pearson": 87.43,
+      "p_pearson_incorreto": 0.00952,
+      "df": 59,
+      "p_value": 0.00184,
+      "verdict": "DESVIO SIGNIFICATIVO",
+      "note": "correcao (N-1)/(N-k) = 1.0926 sobre o Pearson"
+    },
+    {
+      "test": "Higher Criticism (Donoho-Jin)",
+      "statistic": 9.198,
+      "null_mean": 1.709,
+      "n_sims": 800,
+      "p_value": 0.0075,
+      "verdict": "SINAL RARO-E-FRACO DETECTADO"
+    },
+    {
+      "test": "Bayes factor Dirichlet-multinomial",
+      "log10_bf_por_prior": {
+        "alpha=0.5": 61.13,
+        "alpha=1.0": 50.45,
+        "alpha=5.0": 28.81,
+        "alpha=10.0": 20.5
+      },
+      "note": "log10 BF > 0 favorece uniformidade; cada unidade = 10x mais provavel",
+      "verdict": "EVIDENCIA PRO-UNIFORMIDADE"
+    },
+    {
+      "test": "Gaps / tempos de espera (Haigh 1997)",
+      "n_gaps": 11256,
+      "gap_medio": 9.95,
+      "gap_esperado": 10.0,
+      "statistic": 28.33,
+      "df": 29,
+      "p_value": 0.5001,
+      "verdict": "geometrico (ok)"
+    },
+    {
+      "test": "Neyman smooth (ordem 4)",
+      "componentes": {
+        "tendencia linear": -0.153,
+        "curvatura": -0.782,
+        "assimetria cubica": -1.672,
+        "ordem 4": -0.459
+      },
+      "S4": 3.639,
+      "p_value": 0.4012,
+      "n_sims": 800,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Scan statistics (janelas 100/250/500)",
+      "statistic": 4.006,
+      "null_mean": 4.205,
+      "n_sims": 150,
+      "p_value": 0.58,
+      "verdict": "sem episodios"
+    },
+    {
+      "test": "Permutation entropy (Bandt-Pompe, d=4, serie da soma)",
+      "H_norm": 0.9996,
+      "null_mean": 0.9982,
+      "missing_patterns": 0,
+      "p_value": 1.0,
+      "verdict": "ruido (ok)"
+    }
+  ]
+}

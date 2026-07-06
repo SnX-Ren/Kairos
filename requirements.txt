@@ -1,0 +1,10 @@
+# Kairos — dependências Python
+# Instale com: pip install -r requirements.txt
+
+flask
+numpy
+scipy
+scikit-learn
+matplotlib
+pandas
+joblib

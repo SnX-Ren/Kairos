@@ -1,0 +1,78 @@
+{
+  "lottery": "lotofacil",
+  "n_draws": 3725,
+  "pool": "1-25",
+  "balls": 15,
+  "ran_at": "04/07/2026 12:19",
+  "elapsed_s": 23.9,
+  "tests": [
+    {
+      "test": "Hipergeometrico multivariado",
+      "statistic": 59.83,
+      "chi2_pearson": 24.93,
+      "p_pearson_incorreto": 0.40954,
+      "df": 24,
+      "p_value": 7e-05,
+      "verdict": "DESVIO SIGNIFICATIVO",
+      "note": "correcao (N-1)/(N-k) = 2.4000 sobre o Pearson"
+    },
+    {
+      "test": "Higher Criticism (Donoho-Jin)",
+      "statistic": 11.04,
+      "null_mean": 1.558,
+      "n_sims": 300,
+      "p_value": 0.0033,
+      "verdict": "SINAL RARO-E-FRACO DETECTADO"
+    },
+    {
+      "test": "Bayes factor Dirichlet-multinomial",
+      "log10_bf_por_prior": {
+        "alpha=0.5": 40.05,
+        "alpha=1.0": 35.66,
+        "alpha=5.0": 26.59,
+        "alpha=10.0": 22.91
+      },
+      "note": "log10 BF > 0 favorece uniformidade; cada unidade = 10x mais provavel",
+      "verdict": "EVIDENCIA PRO-UNIFORMIDADE"
+    },
+    {
+      "test": "Gaps / tempos de espera (Haigh 1997)",
+      "n_gaps": 55850,
+      "gap_medio": 1.666,
+      "gap_esperado": 1.667,
+      "statistic": 16.85,
+      "df": 9,
+      "p_value": 0.0511,
+      "verdict": "geometrico (ok)"
+    },
+    {
+      "test": "Neyman smooth (ordem 4)",
+      "componentes": {
+        "tendencia linear": 0.321,
+        "curvatura": 0.545,
+        "assimetria cubica": 0.677,
+        "ordem 4": -0.443
+      },
+      "S4": 1.055,
+      "p_value": 0.9867,
+      "n_sims": 300,
+      "verdict": "uniforme"
+    },
+    {
+      "test": "Scan statistics (janelas 100/250/500)",
+      "statistic": 4.695,
+      "null_mean": 3.836,
+      "n_sims": 80,
+      "p_value": 0.0,
+      "verdict": "EPISODIO DE VIES LOCALIZADO"
+    },
+    {
+      "test": "Permutation entropy (Bandt-Pompe, d=4, serie da soma)",
+      "H_norm": 0.9991,
+      "null_mean": 0.9989,
+      "missing_patterns": 0,
+      "p_value": 0.654,
+      "verdict": "ruido (ok)"
+    }
+  ]
+}

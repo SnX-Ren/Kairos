@@ -1,0 +1,78 @@
+{
+  "lottery": "diadesorte",
+  "n_draws": 1235,
+  "pool": "1-31",
+  "balls": 7,
+  "ran_at": "04/07/2026 12:21",
+  "elapsed_s": 13.8,
+  "tests": [
+    {
+      "test": "Hipergeometrico multivariado",
+      "statistic": 34.26,
+      "chi2_pearson": 27.41,
+      "p_pearson_incorreto": 0.60174,
+      "df": 30,
+      "p_value": 0.27052,
+      "verdict": "uniforme",
+      "note": "correcao (N-1)/(N-k) = 1.2500 sobre o Pearson"
+    },
+    {
+      "test": "Higher Criticism (Donoho-Jin)",
+      "statistic": 4.352,
+      "null_mean": 1.585,
+      "n_sims": 300,
+      "p_value": 0.0467,
+      "verdict": "SINAL RARO-E-FRACO DETECTADO"
+    },
+    {
+      "test": "Bayes factor Dirichlet-multinomial",
+      "log10_bf_por_prior": {
+        "alpha=0.5": 37.27,
+        "alpha=1.0": 31.81,
+        "alpha=5.0": 20.63,
+        "alpha=10.0": 16.22
+      },
+      "note": "log10 BF > 0 favorece uniformidade; cada unidade = 10x mais provavel",
+      "verdict": "EVIDENCIA PRO-UNIFORMIDADE"
+    },
+    {
+      "test": "Gaps / tempos de espera (Haigh 1997)",
+      "n_gaps": 8614,
+      "gap_medio": 4.416,
+      "gap_esperado": 4.429,
+      "statistic": 20.34,
+      "df": 24,
+      "p_value": 0.6776,
+      "verdict": "geometrico (ok)"
+    },
+    {
+      "test": "Neyman smooth (ordem 4)",
+      "componentes": {
+        "tendencia linear": 0.296,
+        "curvatura": -1.788,
+        "assimetria cubica": 2.136,
+        "ordem 4": -2.538
+      },
+      "S4": 14.29,
+      "p_value": 0.0,
+      "n_sims": 300,
+      "verdict": "DESVIO ESTRUTURADO: ordem 4"
+    },
+    {
+      "test": "Scan statistics (janelas 100/250/500)",
+      "statistic": 3.688,
+      "null_mean": 3.633,
+      "n_sims": 80,
+      "p_value": 0.4125,
+      "verdict": "sem episodios"
+    },
+    {
+      "test": "Permutation entropy (Bandt-Pompe, d=4, serie da soma)",
+      "H_norm": 0.9977,
+      "null_mean": 0.9972,
+      "missing_patterns": 0,
+      "p_value": 0.628,
+      "verdict": "ruido (ok)"
+    }
+  ]
+}

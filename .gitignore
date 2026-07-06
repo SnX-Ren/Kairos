@@ -1,0 +1,42 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# ── Modelos ML treinados (regeneráveis com src/train_all_ml.py) ──
+models/
+*.joblib
+
+# ── Node / Capacitor ────────────────────────────────────
+node_modules/
+
+# cópia de app/ — regenerada no build
+mobile/www/
+
+# projeto nativo Android — regenerado por 'npx cap add android'
+# (contém local.properties com caminho da máquina + artefatos de build)
+mobile/android/
+
+*.keystore
+*.jks
+
+# ── Produto (app móvel) — mantido privado, fora do repo público ──
+# O repositório público é apenas a webpage/pesquisa. O app e as
+# funções monetizáveis vivem fora do controle de versão público.
+Kairos.apk
+app/
+mobile/
+data/export/
+COMO_INSTALAR.md
+src/build_app.py
+
+# ── Artefatos de build web ──────────────────────────────
+data/dashboard.html
+
+# ── Sistema ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
