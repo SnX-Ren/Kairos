@@ -1,12 +1,12 @@
-# Kairos
+﻿# Kairos
 
-**A statistical audit of Brazilian lottery randomness — and an honest, well-behaved number generator built on top of it.**
+**A statistical audit of Brazilian lottery randomness â€” and an honest, well-behaved number generator built on top of it.**
 
 Kairos started from a provocative question: *can the unpredictable be predicted?* It ends
-with a rigorous, reproducible answer for Brazil's official lotteries — and a small app that
+with a rigorous, reproducible answer for Brazil's official lotteries â€” and a small app that
 turns that answer into something useful.
 
-> **TL;DR** — No method predicts a certified ball-draw lottery. Kairos proves this across
+> **TL;DR** â€” No method predicts a certified ball-draw lottery. Kairos proves this across
 > ~24,500 draws using industrial-grade randomness tests, then ships a generator whose only
 > real edge is *statistical*: it avoids popular numbers so that **if** you win, you split the
 > prize with fewer people.
@@ -18,9 +18,9 @@ turns that answer into something useful.
 | Area | What it does |
 |---|---|
 | **Data pipeline** | Downloads the full history of 9 Brazilian lotteries from the public Caixa API and normalizes it |
-| **Statistical audit** | 7 tests per lottery: multivariate hypergeometric χ², Higher Criticism, Dirichlet–multinomial Bayes factor, gap test, Neyman smooth, scan statistics, permutation entropy — all Monte-Carlo calibrated |
+| **Statistical audit** | 7 tests per lottery: multivariate hypergeometric Ï‡Â², Higher Criticism, Dirichletâ€“multinomial Bayes factor, gap test, Neyman smooth, scan statistics, permutation entropy â€” all Monte-Carlo calibrated |
 | **Sequential monitor** | An anytime-valid e-process (safe under optional stopping) that keeps accumulating evidence as new draws happen |
-| **ML models** | Logistic Regression, Random Forest, Gradient Boosting, MLP — with strict temporal splits and a Precision@k metric |
+| **ML models** | Logistic Regression, Random Forest, Gradient Boosting, MLP â€” with strict temporal splits and a Precision@k metric |
 | **Generator** | A weighted sampler exposing every studied signal as a toggle, each labeled with its real statistical strength |
 | **Web panel** | A local Flask + single-page app to explore, generate, train, and audit |
 
@@ -28,16 +28,16 @@ turns that answer into something useful.
 
 ## Key findings
 
-- **Every method fails to predict future draws.** ML models sit at AUC ≈ 0.48–0.52 (chance),
+- **Every method fails to predict future draws.** ML models sit at AUC â‰ˆ 0.48â€“0.52 (chance),
   and a 10,000-game backtest of the generator is statistically indistinguishable from random.
 - **The physical machines are excellent, but not perfect.** Using the *correct* multivariate
   hypergeometric test (which accounts for the negative covariance a draw-without-replacement
-  induces), Mega-Sena shows a small but significant frequency deviation (p ≈ 0.0018). A naive
-  χ² missed or understated this.
-- **The deviation is real but useless for betting** — a textbook Lindley's paradox: the Bayes
+  induces), Mega-Sena shows a small but significant frequency deviation (p â‰ˆ 0.0018). A naive
+  Ï‡Â² missed or understated this.
+- **The deviation is real but useless for betting** â€” a textbook Lindley's paradox: the Bayes
   factor still strongly favors uniformity. Detectable imperfection, no exploitable edge.
-- **A localized temporal episode** was found in Lotofácil (ball #6 ran cold from Dec 2016 to
-  Aug 2017) via scan statistics — the signature of a physical change (e.g. a ball-set swap).
+- **A localized temporal episode** was found in LotofÃ¡cil (ball #6 ran cold from Dec 2016 to
+  Aug 2017) via scan statistics â€” the signature of a physical change (e.g. a ball-set swap).
 - **The only legitimate edge is avoiding the crowd.** Following the literature (Canada 6/49,
   UK Lotto), picking unpopular numbers doesn't change your odds of winning but reduces how
   many people you'd share a jackpot with.
@@ -73,7 +73,7 @@ python server.py
 ```
 
 From the panel you can pick a lottery, choose lucky numbers, generate games, train the ML
-model, and run the statistical audit — all with plain-language labels.
+model, and run the statistical audit â€” all with plain-language labels.
 
 ---
 
@@ -81,15 +81,15 @@ model, and run the statistical audit — all with plain-language labels.
 
 ```
 Kairos/
-├── src/                  # analysis, models, server, generator
-│   ├── audit.py          # 7-test statistical battery
-│   ├── eprocess.py       # anytime-valid sequential monitor
-│   ├── predictor.py      # unified weighted generator
-│   ├── kairos_engine.py  # weighted sampler core
-│   ├── server.py         # Flask web panel
-│   └── ...
-├── data/                 # lottery CSVs + audit results + research notes
-└── requirements.txt
+â”œâ”€â”€ src/                  # analysis, models, server, generator
+â”‚   â”œâ”€â”€ audit.py          # 7-test statistical battery
+â”‚   â”œâ”€â”€ eprocess.py       # anytime-valid sequential monitor
+â”‚   â”œâ”€â”€ predictor.py      # unified weighted generator
+â”‚   â”œâ”€â”€ kairos_engine.py  # weighted sampler core
+â”‚   â”œâ”€â”€ server.py         # Flask web panel
+â”‚   â””â”€â”€ ...
+â”œâ”€â”€ data/                 # lottery CSVs + audit results + research notes
+â””â”€â”€ requirements.txt
 ```
 
 ---
@@ -97,14 +97,14 @@ Kairos/
 ## Honest disclaimer
 
 Kairos is a **research project and a recreational tool**. It does not, and cannot, increase
-your probability of winning any lottery — the audit in this very repository is the proof.
+your probability of winning any lottery â€” the audit in this very repository is the proof.
 Certified physical draws are, for all practical purposes, unpredictable. Play for fun and
 responsibly.
 
 ## License
 
-**PolyForm Noncommercial 1.0.0** — see [LICENSE](LICENSE).
+**Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** — see [LICENSE](LICENSE).
 
-You're free to use, study, modify, and share this project for any
-**noncommercial** purpose (research, education, personal, hobby). Commercial
-use is not permitted. For commercial licensing, contact the author.
+You may use, study, modify, and share this project for any **noncommercial**
+purpose, with attribution. Commercial use is not permitted without a separate
+agreement. For commercial licensing, contact the author.
